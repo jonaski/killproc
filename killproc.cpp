@@ -42,32 +42,32 @@ HRESULT ModifyPrivilege(IN LPCTSTR szPrivilege, IN BOOL fEnable) {
 
 int main(int argc, char *argv[]) {
 
-  if(argc==1) {
+  if (argc==1) {
     printf("No process name specified");
     return 2;
   }
 
-  if(!SUCCEEDED(ModifyPrivilege(SE_DEBUG_NAME, TRUE))) {
+  if (!SUCCEEDED(ModifyPrivilege(SE_DEBUG_NAME, TRUE))) {
     printf("Error obtaining debug priviledge");
   }
 
-  if(!SUCCEEDED(ModifyPrivilege(SE_TAKE_OWNERSHIP_NAME, TRUE))) {
+  if (!SUCCEEDED(ModifyPrivilege(SE_TAKE_OWNERSHIP_NAME, TRUE))) {
     printf("Error obtaining take ownership priviledge");
   }
 
   DWORD pids[100];
   int npids=getpid(argv[1], pids);
 
-  if(npids == 0) {
+  if (npids == 0) {
     printf("Cannot find process");
     return 3;
   }
 
   bool killed_one=false;
-  for(int i = 0 ; i < npids ; ++i) {
+  for (int i = 0 ; i < npids ; ++i) {
     HANDLE p=OpenProcess(PROCESS_TERMINATE, FALSE, pids[i]);
     if (p) {
-      if(!TerminateProcess(p,0)){
+      if (!TerminateProcess(p,0)){
         printf("Could not terminate process");
       }
       CloseHandle(p);
